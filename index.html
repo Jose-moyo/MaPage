@@ -15,7 +15,6 @@
             overflow-x: hidden;
         }
 
-        /* Background glow effect */
         .bg-glow {
             position: fixed;
             top: 0;
@@ -59,12 +58,6 @@
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
-
         .category-title {
             position: relative;
             display: inline-block;
@@ -88,30 +81,23 @@
 
     <!-- Écran de Connexion Compact -->
     <div id="loginPage" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-6 backdrop-blur-xl">
-        <div class="glass-card p-8 rounded-3xl w-full max-w-sm shadow-2xl border-white/10 text-center">
-            <div class="text-center mb-8">
+        <div class="glass-card p-8 rounded-3xl w-full max-w-[320px] shadow-2xl border-white/10 text-center">
+            <div class="text-center mb-6">
                 <div class="w-12 h-12 bg-blue-600 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-blue-500/20">
                     <i class="fas fa-shield-alt text-xl"></i>
                 </div>
-                <h1 class="text-2xl font-extrabold text-white">Connexion</h1>
-                <p class="text-gray-500 text-sm mt-1">Accès restreint</p>
+                <h1 class="text-xl font-extrabold text-white">Connexion Admin</h1>
             </div>
             <div class="space-y-4">
-                <div>
-                    <label class="block text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-1.5">Utilisateur</label>
-                    <input type="text" id="loginUser" class="w-full p-3 rounded-xl outline-none search-input text-white text-sm">
-                </div>
-                <div>
-                    <label class="block text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-1.5">Mot de passe</label>
-                    <input type="password" id="loginPass" class="w-full p-3 rounded-xl outline-none search-input text-white text-sm">
-                </div>
-                <div id="loginError" class="text-red-400 text-[11px] hidden font-medium text-center">Identifiants incorrects.</div>
+                <input type="text" id="loginUser" placeholder="Utilisateur" class="w-full p-3 rounded-xl outline-none search-input text-white text-sm">
+                <input type="password" id="loginPass" placeholder="Mot de passe" class="w-full p-3 rounded-xl outline-none search-input text-white text-sm">
+                <div id="loginError" class="text-red-400 text-[11px] hidden font-medium">Identifiants incorrects.</div>
                 <div class="flex flex-col gap-2 pt-2">
-                    <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 text-sm">
+                    <button id="submitLogin" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 text-sm">
                         S'identifier
                     </button>
-                    <button onclick="hideLogin()" class="w-full bg-transparent text-gray-500 py-2 rounded-xl hover:text-white transition-all text-[11px] uppercase tracking-wider font-bold">
-                        Annuler
+                    <button id="cancelLogin" class="w-full bg-transparent text-gray-500 py-2 rounded-xl hover:text-white transition-all text-[11px] uppercase tracking-wider font-bold">
+                        Fermer
                     </button>
                 </div>
             </div>
@@ -120,109 +106,68 @@
 
     <!-- Contenu Principal -->
     <div id="mainContent">
-        <!-- Barre supérieure de navigation rapide -->
         <div class="container mx-auto px-6 pt-6 max-w-7xl flex justify-between items-center relative">
             <div class="z-10">
-                <button id="goToLoginBtn" onclick="showLogin()" class="group flex items-center gap-2 text-gray-500 hover:text-blue-500 transition-all font-semibold text-[11px] uppercase tracking-wider">
+                <button id="goToLoginBtn" class="group flex items-center gap-2 text-gray-500 hover:text-blue-500 transition-all font-semibold text-[11px] uppercase tracking-wider">
                     <span class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-blue-500/10 border border-white/5 group-hover:border-blue-500/20 transition-all">
                         <i class="fas fa-lock text-[10px]"></i>
                     </span>
-                    <span class="hidden sm:inline">Connexion</span>
+                    <span class="hidden sm:inline">Admin</span>
                 </button>
-                <button id="logoutBtn" onclick="handleLogout()" class="hidden group flex items-center gap-2 text-red-500/70 hover:text-red-500 transition-all font-semibold text-[11px] uppercase tracking-wider">
+                <button id="logoutBtn" class="hidden group flex items-center gap-2 text-red-500/70 hover:text-red-500 transition-all font-semibold text-[11px] uppercase tracking-wider">
                     <span class="w-8 h-8 rounded-lg bg-red-500/5 flex items-center justify-center border border-red-500/10 group-hover:bg-red-500/20 transition-all">
                         <i class="fas fa-power-off text-[10px]"></i>
                     </span>
-                    <span class="hidden sm:inline">Quitter</span>
+                    <span class="hidden sm:inline">Déconnexion</span>
                 </button>
             </div>
             
             <div id="adminActions" class="hidden z-10">
-                <button id="addBtn" onclick="toggleModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95 text-[11px] uppercase tracking-wide">
-                    <i class="fas fa-plus text-[9px]"></i> Nouveau
+                <button id="addBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95 text-[11px] uppercase tracking-wide">
+                    <i class="fas fa-plus text-[9px]"></i> Ajouter
                 </button>
             </div>
         </div>
 
         <div class="container mx-auto px-6 py-12 lg:py-20 max-w-7xl flex flex-col items-center">
-            
-            <!-- Header Dynamique -->
             <header class="flex flex-col items-center text-center gap-6 mb-20 w-full">
-                <div class="flex flex-col items-center">
-                    <div class="flex flex-col items-center gap-4 mb-3">
-                        <h1 class="text-5xl lg:text-7xl font-extrabold text-white tracking-tight">My link<span class="text-blue-500">'s</span></h1>
-                        <span id="adminLabel" class="hidden admin-badge text-[10px] uppercase font-black px-4 py-1.5 rounded-full tracking-widest mt-2">ADMIN MODE</span>
-                    </div>
-                    <p class="text-gray-400 text-lg font-medium max-w-md mx-auto">Votre passerelle vers le web, organisée avec précision.</p>
-                </div>
+                <h1 class="text-5xl lg:text-7xl font-extrabold text-white tracking-tight">My link<span class="text-blue-500">'s</span></h1>
+                <span id="adminLabel" class="hidden admin-badge text-[10px] uppercase font-black px-4 py-1.5 rounded-full tracking-widest">ADMIN MODE</span>
+                <p class="text-gray-400 text-lg font-medium max-w-md">Vos liens, simplifiés.</p>
             </header>
 
-            <!-- Recherche & Filtres -->
             <div class="relative w-full max-w-3xl mb-24 group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition duration-1000"></div>
-                <div class="relative">
-                    <input type="text" id="searchInput" 
-                           placeholder="Rechercher une ressource..." 
-                           class="w-full px-8 py-6 rounded-2xl shadow-inner text-xl outline-none search-input text-white">
-                    <!-- Icone gauche -->
-                    <div class="absolute left-6 top-1/2 -translate-y-1/2 hidden md:block">
-                        <i class="fas fa-search text-gray-700"></i>
-                    </div>
-                    <!-- Raccourci droite -->
-                    <div class="absolute right-6 top-1/2 -translate-y-1/2 hidden md:flex items-center gap-3 pointer-events-none">
-                        <span class="text-[10px] font-bold text-gray-600 border border-gray-800 px-2 py-1 rounded">CMD K</span>
-                    </div>
-                </div>
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition"></div>
+                <input type="text" id="searchInput" placeholder="Rechercher une ressource..." class="relative w-full px-8 py-6 rounded-2xl shadow-inner text-xl outline-none search-input text-white">
             </div>
 
-            <!-- Grille des Liens -->
             <div id="linksContainer" class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 <div class="col-span-full flex flex-col items-center justify-center py-20 gap-4">
                     <div class="w-12 h-12 border-4 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"></div>
-                    <p class="text-gray-500 font-medium tracking-wide">Initialisation des données...</p>
+                    <p class="text-gray-500 font-medium">Connexion au serveur...</p>
                 </div>
             </div>
-
-            <!-- Pied de page -->
-            <footer class="w-full mt-32 pt-12 border-t border-white/5 flex flex-col items-center text-center">
-                <p class="text-gray-600 text-sm font-medium">© 2024 My link's. Design Ultra-Responsive & Centré.</p>
-            </footer>
         </div>
     </div>
 
-    <!-- Modal d'Ajout Moderne -->
+    <!-- Modal d'Ajout -->
     <div id="addModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-6 z-50">
-        <div class="glass-card p-10 rounded-3xl w-full max-w-lg border-white/10 shadow-3xl text-center">
-            <div class="flex justify-between items-center mb-10">
-                <div class="w-10"></div> <!-- Spacer -->
-                <h2 class="text-3xl font-black text-white">Nouveau Lien</h2>
-                <button onclick="toggleModal()" class="text-gray-500 hover:text-white transition-colors"><i class="fas fa-times text-xl"></i></button>
+        <div class="glass-card p-10 rounded-3xl w-full max-w-lg text-center">
+            <h2 class="text-2xl font-black text-white mb-8">Nouveau Lien</h2>
+            <div class="space-y-4">
+                <input type="text" id="siteName" class="w-full p-4 rounded-xl outline-none search-input" placeholder="Nom du site">
+                <input type="url" id="siteUrl" class="w-full p-4 rounded-xl outline-none search-input" placeholder="URL (https://...)">
+                <select id="siteCategory" class="w-full p-4 rounded-xl outline-none search-input text-gray-400">
+                    <option value="TRAVAIL">💼 Travail</option>
+                    <option value="SOCIAL">🌐 Réseaux Sociaux</option>
+                    <option value="OUTILS">🛠️ Outils & Dev</option>
+                    <option value="LOISIRS">🎮 Loisirs</option>
+                    <option value="AUTRE">✨ Autre</option>
+                </select>
             </div>
-            <div class="space-y-6">
-                <div class="group">
-                    <label class="text-xs uppercase text-gray-500 font-black mb-2 block tracking-widest">Titre du site</label>
-                    <input type="text" id="siteName" class="w-full p-4 rounded-xl outline-none search-input" placeholder="Google, GitHub...">
-                </div>
-                <div class="group">
-                    <label class="text-xs uppercase text-gray-500 font-black mb-2 block tracking-widest">Adresse URL</label>
-                    <input type="url" id="siteUrl" class="w-full p-4 rounded-xl outline-none search-input" placeholder="https://...">
-                </div>
-                <div class="group">
-                    <label class="text-xs uppercase text-gray-500 font-black mb-2 block tracking-widest">Catégorie</label>
-                    <select id="siteCategory" class="w-full p-4 rounded-xl outline-none search-input text-gray-400 appearance-none">
-                        <option value="TRAVAIL">💼 Travail</option>
-                        <option value="SOCIAL">🌐 Réseaux Sociaux</option>
-                        <option value="OUTILS">🛠️ Outils & Dev</option>
-                        <option value="LOISIRS">🎮 Loisirs</option>
-                        <option value="AUTRE">✨ Autre</option>
-                    </select>
-                </div>
-            </div>
-            <div class="mt-12 flex flex-col sm:flex-row gap-4">
-                <button onclick="toggleModal()" class="flex-1 text-gray-400 font-bold py-4 hover:bg-white/5 rounded-2xl transition-all">Fermer</button>
-                <button onclick="saveLink()" class="flex-[2] bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/30">
-                    Ajouter à la base
-                </button>
+            <div class="mt-8 flex gap-4">
+                <button id="closeAddBtn" class="flex-1 text-gray-400 font-bold py-4 rounded-2xl hover:bg-white/5 transition">Fermer</button>
+                <button id="saveLinkBtn" class="flex-[2] bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-500 shadow-lg shadow-blue-600/30">Enregistrer</button>
             </div>
         </div>
     </div>
@@ -236,26 +181,25 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'my-links-premium';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'my-links-app';
 
         let isAdmin = localStorage.getItem('myLinksAuth') === 'true';
-        let userSession = null;
         let allLinks = [];
 
-        async function initAuth() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) { console.error("Auth Error", err); }
-        }
+        // Gestion de l'authentification
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
 
         onAuthStateChanged(auth, (user) => {
-            userSession = user;
-            updateUI();
-            startSync();
+            if (user) {
+                updateUI();
+                startSync();
+            }
         });
 
         function updateUI() {
@@ -278,127 +222,114 @@
             renderLinks();
         }
 
-        window.showLogin = () => document.getElementById('loginPage').classList.remove('hidden');
-        window.hideLogin = () => document.getElementById('loginPage').classList.add('hidden');
-
-        window.handleLogin = () => {
-            const u = document.getElementById('loginUser').value;
-            const p = document.getElementById('loginPass').value;
-            if (u === "admin" && p === "admin") {
-                isAdmin = true;
-                localStorage.setItem('myLinksAuth', 'true');
-                hideLogin();
-                updateUI();
-            } else {
-                const err = document.getElementById('loginError');
-                err.classList.remove('hidden');
-                setTimeout(() => err.classList.add('hidden'), 3000);
-            }
-        };
-
-        window.handleLogout = () => {
-            isAdmin = false;
-            localStorage.removeItem('myLinksAuth');
-            window.location.reload();
-        };
-
         function startSync() {
-            if (!userSession) return;
             const linksCol = collection(db, 'artifacts', appId, 'public', 'data', 'links');
             onSnapshot(linksCol, (snapshot) => {
                 allLinks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderLinks();
-            }, (error) => console.error("Sync Error", error));
+            }, (err) => {
+                console.error("Firestore error:", err);
+                document.getElementById('linksContainer').innerHTML = "<p class='col-span-full text-center text-gray-500'>Impossible de charger les données.</p>";
+            });
         }
-
-        window.saveLink = async () => {
-            if (!isAdmin) return;
-            const name = document.getElementById('siteName').value;
-            const url = document.getElementById('siteUrl').value;
-            const category = document.getElementById('siteCategory').value;
-
-            if (name && url) {
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'links'), {
-                    name, url, category, createdAt: serverTimestamp()
-                });
-                toggleModal();
-                document.getElementById('siteName').value = "";
-                document.getElementById('siteUrl').value = "";
-            }
-        };
-
-        window.deleteLink = async (id) => {
-            if (!isAdmin) return;
-            if(confirm("Supprimer ce lien définitivement ?")) {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', id));
-            }
-        };
 
         function renderLinks(filter = "") {
             const container = document.getElementById('linksContainer');
-            container.innerHTML = "";
-
             const filtered = allLinks.filter(l => 
                 l.name.toLowerCase().includes(filter.toLowerCase()) || 
                 l.category.toLowerCase().includes(filter.toLowerCase())
             );
 
             if (filtered.length === 0 && allLinks.length > 0) {
-                container.innerHTML = `<div class="col-span-full text-center text-gray-600 py-20 flex flex-col items-center gap-4">
-                    <i class="fas fa-search text-4xl opacity-20"></i>
-                    <p class="text-xl font-medium">Aucun résultat trouvé.</p>
-                </div>`;
+                container.innerHTML = `<p class="col-span-full text-center text-gray-600 py-10">Aucun lien trouvé.</p>`;
+                return;
+            } else if (allLinks.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-center text-gray-600 py-10">La liste est vide.</p>`;
                 return;
             }
 
+            container.innerHTML = "";
             const groups = filtered.reduce((acc, link) => {
                 acc[link.category] = [...(acc[link.category] || []), link];
                 return acc;
             }, {});
 
             Object.keys(groups).sort().forEach(cat => {
-                const section = document.createElement('div');
-                section.className = "col-span-full mb-12 text-center";
-                section.innerHTML = `
-                    <h3 class="category-title text-sm font-black tracking-[0.3em] text-blue-500 mb-10 uppercase">${cat}</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                        ${groups[cat].map(link => `
-                            <div class="glass-card p-6 rounded-3xl flex flex-col justify-between group h-[180px] text-center items-center relative">
-                                <a href="${link.url}" target="_blank" class="flex flex-col h-full w-full items-center">
-                                    <div class="flex items-center justify-center mb-5">
-                                        <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-inner">
-                                            <i class="fas fa-link text-xl"></i>
-                                        </div>
-                                    </div>
-                                    <div class="overflow-hidden w-full">
-                                        <div class="font-extrabold text-white text-xl group-hover:text-blue-400 transition-colors truncate px-2">${link.name}</div>
-                                        <div class="text-[10px] text-gray-600 truncate mt-2 group-hover:text-gray-400 transition-colors opacity-60">${link.url.replace('https://','').replace('http://','')}</div>
-                                    </div>
-                                </a>
-                                ${isAdmin ? `
-                                <div class="w-full flex justify-center mt-3 pt-2 border-t border-white/5">
-                                    <button onclick="deleteLink('${link.id}')" class="text-gray-700 hover:text-red-500 transition-colors text-sm p-1">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                                ` : ''}
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(section);
+                const groupDiv = document.createElement('div');
+                groupDiv.className = "col-span-full mb-8 text-center";
+                groupDiv.innerHTML = `<h3 class="category-title text-[10px] font-black tracking-widest text-blue-500 mb-8 uppercase">${cat}</h3>`;
+                
+                const grid = document.createElement('div');
+                grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6";
+                
+                groups[cat].forEach(link => {
+                    const card = document.createElement('div');
+                    card.className = "glass-card p-6 rounded-2xl relative h-[160px] flex flex-col items-center justify-center";
+                    card.innerHTML = `
+                        <a href="${link.url}" target="_blank" class="text-center group w-full">
+                            <div class="text-white font-bold text-lg group-hover:text-blue-400 truncate mb-1">${link.name}</div>
+                            <div class="text-[10px] text-gray-600 truncate opacity-50">${link.url}</div>
+                        </a>
+                        ${isAdmin ? `<button class="delete-btn absolute bottom-3 right-3 text-gray-800 hover:text-red-500 transition-colors" data-id="${link.id}"><i class="fas fa-trash-alt text-xs"></i></button>` : ''}
+                    `;
+                    grid.appendChild(card);
+                });
+                
+                groupDiv.appendChild(grid);
+                container.appendChild(groupDiv);
+            });
+
+            // Event listeners pour suppression
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.onclick = async () => {
+                    if (confirm("Supprimer ce lien ?")) {
+                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', btn.dataset.id));
+                    }
+                };
             });
         }
 
-        window.toggleModal = () => document.getElementById('addModal').classList.toggle('hidden');
-        document.getElementById('searchInput').addEventListener('input', (e) => renderLinks(e.target.value));
+        // Event listeners UI
+        document.getElementById('goToLoginBtn').onclick = () => document.getElementById('loginPage').classList.remove('hidden');
+        document.getElementById('cancelLogin').onclick = () => document.getElementById('loginPage').classList.add('hidden');
+        document.getElementById('addBtn').onclick = () => document.getElementById('addModal').classList.remove('hidden');
+        document.getElementById('closeAddBtn').onclick = () => document.getElementById('addModal').classList.add('hidden');
+        document.getElementById('logoutBtn').onclick = () => {
+            isAdmin = false;
+            localStorage.removeItem('myLinksAuth');
+            window.location.reload();
+        };
 
-        window.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault();
-                document.getElementById('searchInput').focus();
+        document.getElementById('submitLogin').onclick = () => {
+            const u = document.getElementById('loginUser').value;
+            const p = document.getElementById('loginPass').value;
+            if (u === "admin" && p === "admin") {
+                isAdmin = true;
+                localStorage.setItem('myLinksAuth', 'true');
+                document.getElementById('loginPage').classList.add('hidden');
+                updateUI();
+            } else {
+                const err = document.getElementById('loginError');
+                err.classList.remove('hidden');
+                setTimeout(() => err.classList.add('hidden'), 2000);
             }
-        });
+        };
+
+        document.getElementById('saveLinkBtn').onclick = async () => {
+            const name = document.getElementById('siteName').value;
+            const url = document.getElementById('siteUrl').value;
+            const category = document.getElementById('siteCategory').value;
+            if (name && url) {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'links'), {
+                    name, url, category, createdAt: serverTimestamp()
+                });
+                document.getElementById('addModal').classList.add('hidden');
+                document.getElementById('siteName').value = "";
+                document.getElementById('siteUrl').value = "";
+            }
+        };
+
+        document.getElementById('searchInput').oninput = (e) => renderLinks(e.target.value);
 
         initAuth();
     </script>

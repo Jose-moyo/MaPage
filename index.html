@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My link's - Portail Premium</title>
+    <title>My link's - Stockage Interne</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -38,24 +38,12 @@
             border-color: rgba(59, 130, 246, 0.4);
             background: rgba(20, 20, 20, 0.9);
             transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.1);
         }
 
         .search-input {
             background: rgba(20, 20, 20, 0.8) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            transition: all 0.3s ease;
             text-align: center;
-        }
-
-        .search-input:focus {
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
-        }
-
-        .admin-badge {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
 
         .category-title {
@@ -71,7 +59,6 @@
             width: 30px;
             height: 2px;
             background: #3b82f6;
-            border-radius: 2px;
         }
     </style>
 </head>
@@ -79,158 +66,100 @@
 
     <div class="bg-glow"></div>
 
-    <!-- Écran de Connexion Compact -->
-    <div id="loginPage" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-6 backdrop-blur-xl">
-        <div class="glass-card p-8 rounded-3xl w-full max-w-[320px] shadow-2xl border-white/10 text-center">
+    <!-- Modale de Connexion -->
+    <div id="loginPage" class="hidden fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="glass-card p-6 rounded-3xl w-full max-w-[300px] border-white/10 shadow-2xl">
             <div class="text-center mb-6">
-                <div class="w-12 h-12 bg-blue-600 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                    <i class="fas fa-shield-alt text-xl"></i>
+                <div class="w-10 h-10 bg-blue-600 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                    <i class="fas fa-user-shield text-lg text-white"></i>
                 </div>
-                <h1 class="text-xl font-extrabold text-white">Connexion Admin</h1>
+                <h2 class="text-lg font-bold text-white">Administration</h2>
             </div>
-            <div class="space-y-4">
-                <input type="text" id="loginUser" placeholder="Utilisateur" class="w-full p-3 rounded-xl outline-none search-input text-white text-sm">
-                <input type="password" id="loginPass" placeholder="Mot de passe" class="w-full p-3 rounded-xl outline-none search-input text-white text-sm">
-                <div id="loginError" class="text-red-400 text-[11px] hidden font-medium">Identifiants incorrects.</div>
-                <div class="flex flex-col gap-2 pt-2">
-                    <button id="submitLogin" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 text-sm">
-                        S'identifier
-                    </button>
-                    <button id="cancelLogin" class="w-full bg-transparent text-gray-500 py-2 rounded-xl hover:text-white transition-all text-[11px] uppercase tracking-wider font-bold">
-                        Fermer
-                    </button>
-                </div>
+            <div class="space-y-3">
+                <input type="text" id="loginUser" placeholder="Utilisateur" class="w-full p-2.5 rounded-xl outline-none search-input text-white text-xs">
+                <input type="password" id="loginPass" placeholder="Mot de passe" class="w-full p-2.5 rounded-xl outline-none search-input text-white text-xs">
+                <div id="loginError" class="text-red-400 text-[10px] hidden text-center">Identifiants incorrects.</div>
+                <button id="submitLogin" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition-all text-xs">
+                    Connexion
+                </button>
+                <button id="cancelLogin" class="w-full text-gray-500 py-1 text-[10px] font-bold uppercase tracking-wider">
+                    Annuler
+                </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="container mx-auto px-6 pt-6 max-w-7xl flex justify-between items-center relative z-20">
+        <button id="goToLoginBtn" class="flex items-center gap-2 text-gray-500 hover:text-blue-500 transition-all font-bold text-[10px] uppercase tracking-widest">
+            <i class="fas fa-lock p-2 bg-white/5 rounded-lg border border-white/10"></i>
+            <span>ADMIN</span>
+        </button>
+        
+        <div class="flex gap-4">
+            <button id="addBtn" class="hidden bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-lg font-bold text-[10px] uppercase">
+                <i class="fas fa-plus mr-1"></i> Ajouter
+            </button>
+            <button id="logoutBtn" class="hidden text-red-500/70 hover:text-red-500 font-bold text-[10px] uppercase tracking-widest">
+                <i class="fas fa-power-off"></i>
+            </button>
         </div>
     </div>
 
     <!-- Contenu Principal -->
-    <div id="mainContent">
-        <div class="container mx-auto px-6 pt-6 max-w-7xl flex justify-between items-center relative">
-            <div class="z-10">
-                <button id="goToLoginBtn" class="group flex items-center gap-2 text-gray-500 hover:text-blue-500 transition-all font-semibold text-[11px] uppercase tracking-wider">
-                    <span class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-blue-500/10 border border-white/5 group-hover:border-blue-500/20 transition-all">
-                        <i class="fas fa-lock text-[10px]"></i>
-                    </span>
-                    <span class="hidden sm:inline">Admin</span>
-                </button>
-                <button id="logoutBtn" class="hidden group flex items-center gap-2 text-red-500/70 hover:text-red-500 transition-all font-semibold text-[11px] uppercase tracking-wider">
-                    <span class="w-8 h-8 rounded-lg bg-red-500/5 flex items-center justify-center border border-red-500/10 group-hover:bg-red-500/20 transition-all">
-                        <i class="fas fa-power-off text-[10px]"></i>
-                    </span>
-                    <span class="hidden sm:inline">Déconnexion</span>
-                </button>
-            </div>
-            
-            <div id="adminActions" class="hidden z-10">
-                <button id="addBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg shadow-blue-600/20 flex items-center gap-2 transition-all active:scale-95 text-[11px] uppercase tracking-wide">
-                    <i class="fas fa-plus text-[9px]"></i> Ajouter
-                </button>
-            </div>
+    <div class="container mx-auto px-6 py-12 lg:py-16 max-w-7xl flex flex-col items-center">
+        <header class="text-center mb-16">
+            <h1 class="text-5xl lg:text-7xl font-black text-white mb-2">My link<span class="text-blue-500">'s</span></h1>
+            <div id="adminLabel" class="hidden text-blue-500 text-[9px] font-black tracking-[0.4em] uppercase mb-4">MODE ADMINISTRATEUR</div>
+            <p class="text-gray-500 font-medium">Stockage Local (Interne au navigateur)</p>
+        </header>
+
+        <div class="w-full max-w-2xl mb-20">
+            <input type="text" id="searchInput" placeholder="Rechercher..." class="w-full px-8 py-5 rounded-2xl search-input text-white text-lg outline-none focus:border-blue-500/50 transition-all shadow-xl">
         </div>
 
-        <div class="container mx-auto px-6 py-12 lg:py-20 max-w-7xl flex flex-col items-center">
-            <header class="flex flex-col items-center text-center gap-6 mb-20 w-full">
-                <h1 class="text-5xl lg:text-7xl font-extrabold text-white tracking-tight">My link<span class="text-blue-500">'s</span></h1>
-                <span id="adminLabel" class="hidden admin-badge text-[10px] uppercase font-black px-4 py-1.5 rounded-full tracking-widest">ADMIN MODE</span>
-                <p class="text-gray-400 text-lg font-medium max-w-md">Vos liens, simplifiés.</p>
-            </header>
+        <div id="linksContainer" class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Les liens s'afficheront ici -->
+        </div>
+    </div>
 
-            <div class="relative w-full max-w-3xl mb-24 group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition"></div>
-                <input type="text" id="searchInput" placeholder="Rechercher une ressource..." class="relative w-full px-8 py-6 rounded-2xl shadow-inner text-xl outline-none search-input text-white">
-            </div>
-
-            <div id="linksContainer" class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <div class="col-span-full flex flex-col items-center justify-center py-20 gap-4">
-                    <div class="w-12 h-12 border-4 border-blue-600/30 border-t-blue-600 rounded-full animate-spin"></div>
-                    <p class="text-gray-500 font-medium">Connexion au serveur...</p>
+    <!-- Modal d'Ajout -->
+    <div id="addModal" class="hidden fixed inset-0 bg-black/95 flex items-center justify-center p-6 z-50">
+        <div class="glass-card p-8 rounded-3xl w-full max-w-md text-center">
+            <h2 class="text-xl font-black text-white mb-6 uppercase tracking-widest">Nouveau Lien</h2>
+            <div class="space-y-4">
+                <input type="text" id="siteName" class="w-full p-4 rounded-xl outline-none search-input text-sm" placeholder="Nom">
+                <input type="url" id="siteUrl" class="w-full p-4 rounded-xl outline-none search-input text-sm" placeholder="URL (https://...)">
+                <select id="siteCategory" class="w-full p-4 rounded-xl outline-none search-input text-sm text-gray-400">
+                    <option value="TRAVAIL">💼 TRAVAIL</option>
+                    <option value="SOCIAL">🌐 RÉSEAUX SOCIAUX</option>
+                    <option value="OUTILS">🛠️ OUTILS</option>
+                    <option value="LOISIRS">🎮 LOISIRS</option>
+                </select>
+                <div class="flex gap-3 pt-4">
+                    <button id="closeAddBtn" class="flex-1 text-gray-500 font-bold py-3">ANNULER</button>
+                    <button id="saveLinkBtn" class="flex-[2] bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-600/20">ENREGISTRER</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal d'Ajout -->
-    <div id="addModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-6 z-50">
-        <div class="glass-card p-10 rounded-3xl w-full max-w-lg text-center">
-            <h2 class="text-2xl font-black text-white mb-8">Nouveau Lien</h2>
-            <div class="space-y-4">
-                <input type="text" id="siteName" class="w-full p-4 rounded-xl outline-none search-input" placeholder="Nom du site">
-                <input type="url" id="siteUrl" class="w-full p-4 rounded-xl outline-none search-input" placeholder="URL (https://...)">
-                <select id="siteCategory" class="w-full p-4 rounded-xl outline-none search-input text-gray-400">
-                    <option value="TRAVAIL">💼 Travail</option>
-                    <option value="SOCIAL">🌐 Réseaux Sociaux</option>
-                    <option value="OUTILS">🛠️ Outils & Dev</option>
-                    <option value="LOISIRS">🎮 Loisirs</option>
-                    <option value="AUTRE">✨ Autre</option>
-                </select>
-            </div>
-            <div class="mt-8 flex gap-4">
-                <button id="closeAddBtn" class="flex-1 text-gray-400 font-bold py-4 rounded-2xl hover:bg-white/5 transition">Fermer</button>
-                <button id="saveLinkBtn" class="flex-[2] bg-blue-600 text-white font-black py-4 rounded-2xl hover:bg-blue-500 shadow-lg shadow-blue-600/30">Enregistrer</button>
-            </div>
-        </div>
-    </div>
+    <script>
+        // --- BASE DE DONNÉES INTERNE (localStorage) ---
+        let allLinks = JSON.parse(localStorage.getItem('my_links_data')) || [];
+        let isAdmin = sessionStorage.getItem('is_admin') === 'true';
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'my-links-app';
-
-        let isAdmin = localStorage.getItem('myLinksAuth') === 'true';
-        let allLinks = [];
-
-        // Gestion de l'authentification
-        const initAuth = async () => {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
-            }
-        };
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                updateUI();
-                startSync();
-            }
-        });
-
-        function updateUI() {
-            const adminActions = document.getElementById('adminActions');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const goToLoginBtn = document.getElementById('goToLoginBtn');
-            const adminLabel = document.getElementById('adminLabel');
-
-            if (isAdmin) {
-                adminActions.classList.remove('hidden');
-                logoutBtn.classList.remove('hidden');
-                adminLabel.classList.remove('hidden');
-                goToLoginBtn.classList.add('hidden');
-            } else {
-                adminActions.classList.add('hidden');
-                logoutBtn.classList.add('hidden');
-                adminLabel.classList.add('hidden');
-                goToLoginBtn.classList.remove('hidden');
-            }
+        function saveData() {
+            localStorage.setItem('my_links_data', JSON.stringify(allLinks));
             renderLinks();
         }
 
-        function startSync() {
-            const linksCol = collection(db, 'artifacts', appId, 'public', 'data', 'links');
-            onSnapshot(linksCol, (snapshot) => {
-                allLinks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderLinks();
-            }, (err) => {
-                console.error("Firestore error:", err);
-                document.getElementById('linksContainer').innerHTML = "<p class='col-span-full text-center text-gray-500'>Impossible de charger les données.</p>";
-            });
+        function updateUI() {
+            document.getElementById('addBtn').classList.toggle('hidden', !isAdmin);
+            document.getElementById('logoutBtn').classList.toggle('hidden', !isAdmin);
+            document.getElementById('adminLabel').classList.toggle('hidden', !isAdmin);
+            document.getElementById('goToLoginBtn').classList.toggle('hidden', isAdmin);
+            renderLinks();
         }
 
         function renderLinks(filter = "") {
@@ -240,11 +169,8 @@
                 l.category.toLowerCase().includes(filter.toLowerCase())
             );
 
-            if (filtered.length === 0 && allLinks.length > 0) {
-                container.innerHTML = `<p class="col-span-full text-center text-gray-600 py-10">Aucun lien trouvé.</p>`;
-                return;
-            } else if (allLinks.length === 0) {
-                container.innerHTML = `<p class="col-span-full text-center text-gray-600 py-10">La liste est vide.</p>`;
+            if (filtered.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-center text-gray-700 py-10 uppercase text-[10px] tracking-widest">Aucun lien enregistré</p>`;
                 return;
             }
 
@@ -256,82 +182,79 @@
 
             Object.keys(groups).sort().forEach(cat => {
                 const groupDiv = document.createElement('div');
-                groupDiv.className = "col-span-full mb-8 text-center";
-                groupDiv.innerHTML = `<h3 class="category-title text-[10px] font-black tracking-widest text-blue-500 mb-8 uppercase">${cat}</h3>`;
+                groupDiv.className = "col-span-full mb-10";
+                groupDiv.innerHTML = `<div class="text-center mb-8"><h3 class="category-title text-[9px] font-black tracking-[0.3em] text-blue-500 uppercase">${cat}</h3></div>`;
                 
                 const grid = document.createElement('div');
-                grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6";
+                grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4";
                 
-                groups[cat].forEach(link => {
+                groups[cat].forEach((link, index) => {
                     const card = document.createElement('div');
-                    card.className = "glass-card p-6 rounded-2xl relative h-[160px] flex flex-col items-center justify-center";
+                    card.className = "glass-card p-6 rounded-2xl relative h-[140px] flex flex-col items-center justify-center group";
                     card.innerHTML = `
-                        <a href="${link.url}" target="_blank" class="text-center group w-full">
-                            <div class="text-white font-bold text-lg group-hover:text-blue-400 truncate mb-1">${link.name}</div>
-                            <div class="text-[10px] text-gray-600 truncate opacity-50">${link.url}</div>
+                        <a href="${link.url}" target="_blank" class="text-center w-full">
+                            <div class="text-white font-bold text-lg group-hover:text-blue-400 truncate">${link.name}</div>
+                            <div class="text-[9px] text-gray-700 truncate mt-1">${link.url.replace('https://','')}</div>
                         </a>
-                        ${isAdmin ? `<button class="delete-btn absolute bottom-3 right-3 text-gray-800 hover:text-red-500 transition-colors" data-id="${link.id}"><i class="fas fa-trash-alt text-xs"></i></button>` : ''}
+                        ${isAdmin ? `<button onclick="deleteLink(${index})" class="absolute top-2 right-2 text-gray-800 hover:text-red-500 p-2"><i class="fas fa-times text-[10px]"></i></button>` : ''}
                     `;
                     grid.appendChild(card);
                 });
-                
                 groupDiv.appendChild(grid);
                 container.appendChild(groupDiv);
             });
-
-            // Event listeners pour suppression
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.onclick = async () => {
-                    if (confirm("Supprimer ce lien ?")) {
-                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'links', btn.dataset.id));
-                    }
-                };
-            });
         }
 
-        // Event listeners UI
-        document.getElementById('goToLoginBtn').onclick = () => document.getElementById('loginPage').classList.remove('hidden');
-        document.getElementById('cancelLogin').onclick = () => document.getElementById('loginPage').classList.add('hidden');
-        document.getElementById('addBtn').onclick = () => document.getElementById('addModal').classList.remove('hidden');
-        document.getElementById('closeAddBtn').onclick = () => document.getElementById('addModal').classList.add('hidden');
-        document.getElementById('logoutBtn').onclick = () => {
-            isAdmin = false;
-            localStorage.removeItem('myLinksAuth');
-            window.location.reload();
-        };
+        function deleteLink(index) {
+            if(confirm("Supprimer ce lien ?")) {
+                allLinks.splice(index, 1);
+                saveData();
+            }
+        }
 
-        document.getElementById('submitLogin').onclick = () => {
-            const u = document.getElementById('loginUser').value;
-            const p = document.getElementById('loginPass').value;
-            if (u === "admin" && p === "admin") {
-                isAdmin = true;
-                localStorage.setItem('myLinksAuth', 'true');
-                document.getElementById('loginPage').classList.add('hidden');
+        // --- ÉVÉNEMENTS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+
+            document.getElementById('goToLoginBtn').onclick = () => document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('cancelLogin').onclick = () => document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('addBtn').onclick = () => document.getElementById('addModal').classList.remove('hidden');
+            document.getElementById('closeAddBtn').onclick = () => document.getElementById('addModal').classList.add('hidden');
+            
+            document.getElementById('logoutBtn').onclick = () => {
+                isAdmin = false;
+                sessionStorage.removeItem('is_admin');
                 updateUI();
-            } else {
-                const err = document.getElementById('loginError');
-                err.classList.remove('hidden');
-                setTimeout(() => err.classList.add('hidden'), 2000);
-            }
-        };
+            };
 
-        document.getElementById('saveLinkBtn').onclick = async () => {
-            const name = document.getElementById('siteName').value;
-            const url = document.getElementById('siteUrl').value;
-            const category = document.getElementById('siteCategory').value;
-            if (name && url) {
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'links'), {
-                    name, url, category, createdAt: serverTimestamp()
-                });
-                document.getElementById('addModal').classList.add('hidden');
-                document.getElementById('siteName').value = "";
-                document.getElementById('siteUrl').value = "";
-            }
-        };
+            document.getElementById('submitLogin').onclick = () => {
+                const u = document.getElementById('loginUser').value;
+                const p = document.getElementById('loginPass').value;
+                if (u === "admin" && p === "admin") {
+                    isAdmin = true;
+                    sessionStorage.setItem('is_admin', 'true');
+                    document.getElementById('loginPage').classList.add('hidden');
+                    updateUI();
+                } else {
+                    document.getElementById('loginError').classList.remove('hidden');
+                }
+            };
 
-        document.getElementById('searchInput').oninput = (e) => renderLinks(e.target.value);
+            document.getElementById('saveLinkBtn').onclick = () => {
+                const name = document.getElementById('siteName').value;
+                const url = document.getElementById('siteUrl').value;
+                const category = document.getElementById('siteCategory').value;
+                if (name && url) {
+                    allLinks.push({ name, url, category });
+                    saveData();
+                    document.getElementById('addModal').classList.add('hidden');
+                    document.getElementById('siteName').value = "";
+                    document.getElementById('siteUrl').value = "";
+                }
+            };
 
-        initAuth();
+            document.getElementById('searchInput').oninput = (e) => renderLinks(e.target.value);
+        });
     </script>
 </body>
 </html>
